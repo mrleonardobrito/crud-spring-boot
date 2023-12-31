@@ -10,7 +10,7 @@ import org.springframework.boot.test.json.JacksonTester;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-public class DishJsonTest {
+public class DishJsonTests {
     @Autowired
     private JacksonTester<Dish> json;
 
