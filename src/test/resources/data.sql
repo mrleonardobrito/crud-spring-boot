@@ -1,0 +1,1 @@
+INSERT INTO dish(id, name, description) VALUES (99, 'Salada Ravanello', 'Rabanetes, folhas verdes e molho agridoce salpicados com gergelim.');
