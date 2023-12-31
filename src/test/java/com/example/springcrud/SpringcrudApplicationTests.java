@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
+import net.minidev.json.JSONArray;
+
 @SpringBootTest(webEnvironment = 
 SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SpringcrudApplicationTests {
@@ -66,5 +68,29 @@ class SpringcrudApplicationTests {
 		assertThat(id).isNotNull();
 		assertThat(name).isEqualTo(dish.name());
 		assertThat(description).isEqualTo(dish.description());
+	}
+
+	@Test
+	void shouldReturnAllDishesWhenListIsRequested() {
+		ResponseEntity<String> response = restTemplate.getForEntity("/dish/menu", String.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+		DocumentContext documentContext = JsonPath.parse(response.getBody());
+		int dishCount = documentContext.read("$.length()");
+		assertThat(dishCount).isEqualTo(3);
+
+		JSONArray ids = documentContext.read("$..id");
+		assertThat(ids).containsExactlyInAnyOrder(99, 100, 101);
+
+		JSONArray names = documentContext.read("$..name");
+		assertThat(names).containsExactlyInAnyOrder("Salada Ravanello", "Macarons", "Suco de maracujá");
+
+		JSONArray descriptions = documentContext.read("$..description");
+		assertThat(descriptions).containsExactlyInAnyOrder(
+			"Rabanetes, folhas verdes e molho agridoce salpicados com gergelim.", 
+			"Farinha de amêndoas, manteiga, claras e açúcar.", 
+			"Suco de maracujá gelado, cremoso, docinho."
+		);
 	}
 }

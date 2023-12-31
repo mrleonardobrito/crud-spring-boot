@@ -40,4 +40,9 @@ public class DishController {
             .toUri();
         return ResponseEntity.created(locationOfNewDish).build();
     }
+
+    @GetMapping("/menu")
+    private ResponseEntity<Iterable<Dish>> findAll(){
+        return ResponseEntity.ok(dishRepository.findAll());
+    }
 }
