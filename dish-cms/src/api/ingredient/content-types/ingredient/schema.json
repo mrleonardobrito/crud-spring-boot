@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ingredients",
+  "info": {
+    "singularName": "ingredient",
+    "pluralName": "ingredients",
+    "displayName": "Ingredient",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "dishes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::dish.dish",
+      "inversedBy": "ingredients"
+    }
+  }
+}
