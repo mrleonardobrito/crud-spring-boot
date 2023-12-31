@@ -2,6 +2,8 @@ package com.example.springcrud;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.URI;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +23,7 @@ class SpringcrudApplicationTests {
 	@Test
 	void shouldReturnADishWhenDataIsSaved() {
 		ResponseEntity<String> response = 
-		restTemplate.getForEntity("/dishes/99", String.class);
+		restTemplate.getForEntity("/dish/99", String.class);
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -39,9 +41,30 @@ class SpringcrudApplicationTests {
 	@Test
 	void shouldNotReturnADishWithAnUnknownId() {
 		ResponseEntity<String> response =
-		restTemplate.getForEntity("/dishes/1000", String.class);
+		restTemplate.getForEntity("/dish/1000", String.class);
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 		assertThat(response.getBody()).isBlank();
+	}
+
+	@Test
+	void shouldCreateANewDish() {
+		Dish dish = new Dish(null, "Vinagrete", "Tomates temperados com coisinhas que esqueci o nome");
+
+		ResponseEntity<Void> createResponse = restTemplate.postForEntity("/dish", dish, Void.class);
+		assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+		URI locationOfNewDish = createResponse.getHeaders().getLocation();
+		ResponseEntity<String> getResponse = restTemplate.getForEntity(locationOfNewDish, String.class);
+		assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+		DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+		Number id = documentContext.read("$.id");
+		String name = documentContext.read("$.name");
+		String description = documentContext.read("$.description");
+
+		assertThat(id).isNotNull();
+		assertThat(name).isEqualTo(dish.name());
+		assertThat(description).isEqualTo(dish.description());
 	}
 }
