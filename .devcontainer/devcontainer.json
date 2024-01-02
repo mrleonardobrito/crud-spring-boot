@@ -13,7 +13,11 @@
 		},
 		"ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {},
 		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {},
-		"ghcr.io/wxw-matt/devcontainer-features/command_runner:0": {}
+		"ghcr.io/wxw-matt/devcontainer-features/command_runner:0": {},
+		"ghcr.io/devcontainers/features/node": {
+			"version": "20",
+			"installYarn": "true"
+		}
 	},
 	"customizations": {
 		"vscode": {
