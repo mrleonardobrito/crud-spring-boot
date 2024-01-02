@@ -17,8 +17,7 @@
     "dishes": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::dish.dish",
-      "inversedBy": "category"
+      "target": "api::dish.dish"
     }
   }
 }
