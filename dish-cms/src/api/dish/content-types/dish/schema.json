@@ -12,10 +12,10 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "Name": {
+    "name": {
       "type": "string"
     },
-    "Price": {
+    "price": {
       "type": "float"
     },
     "category": {
@@ -41,7 +41,7 @@
         "audios"
       ]
     },
-    "Description": {
+    "description": {
       "type": "text"
     }
   }

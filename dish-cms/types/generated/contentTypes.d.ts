@@ -774,12 +774,13 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
     singularName: 'category';
     pluralName: 'categories';
     displayName: 'Category';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    Name: Attribute.String;
+    name: Attribute.String;
     dishes: Attribute.Relation<
       'api::category.category',
       'oneToMany',
@@ -815,8 +816,8 @@ export interface ApiDishDish extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    Name: Attribute.String;
-    Price: Attribute.Float;
+    name: Attribute.String;
+    price: Attribute.Float;
     category: Attribute.Relation<
       'api::dish.dish',
       'manyToOne',
@@ -828,7 +829,7 @@ export interface ApiDishDish extends Schema.CollectionType {
       'api::ingredient.ingredient'
     >;
     Image: Attribute.Media;
-    Description: Attribute.Text;
+    description: Attribute.Text;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -851,7 +852,7 @@ export interface ApiIngredientIngredient extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    Name: Attribute.String;
+    name: Attribute.String;
     dishes: Attribute.Relation<
       'api::ingredient.ingredient',
       'manyToMany',
