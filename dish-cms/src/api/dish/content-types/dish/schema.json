@@ -3,7 +3,7 @@
   "collectionName": "dishes",
   "info": {
     "singularName": "dish",
-    "pluralName": "dishes",
+    "pluralName": "menu",
     "displayName": "Dish",
     "description": ""
   },

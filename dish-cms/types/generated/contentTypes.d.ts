@@ -807,7 +807,7 @@ export interface ApiDishDish extends Schema.CollectionType {
   collectionName: 'dishes';
   info: {
     singularName: 'dish';
-    pluralName: 'dishes';
+    pluralName: 'menu';
     displayName: 'Dish';
     description: '';
   };
@@ -829,11 +829,6 @@ export interface ApiDishDish extends Schema.CollectionType {
     >;
     Image: Attribute.Media;
     Description: Attribute.Text;
-    Category: Attribute.Relation<
-      'api::dish.dish',
-      'manyToOne',
-      'api::category.category'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
