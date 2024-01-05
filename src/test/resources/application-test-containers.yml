@@ -1,0 +1,10 @@
+spring:
+    datasource:
+        url: jdbc:tc:postgresql://database:5432/postgres
+        username: user
+        password: password
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+    flyway:
+        enabled: false

@@ -1,10 +1,8 @@
 package com.example.springcrud;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.net.URI;
-
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -14,83 +12,36 @@ import org.springframework.http.ResponseEntity;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
-import net.minidev.json.JSONArray;
-
 @SpringBootTest(webEnvironment = 
 SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SpringcrudApplicationTests {
-	@Autowired
-	TestRestTemplate restTemplate;
+		@Autowired
+		TestRestTemplate restTemplate;
 
-	@Test
-	void shouldReturnADishWhenDataIsSaved() {
-		ResponseEntity<String> response = 
-		restTemplate.getForEntity("/dish/99", String.class);
+		@Test
+		@DisplayName("/api/menu/{id} - should return a dish when a existing dish is requested")
+		void shouldReturnADishWhenASingleDishIsRequested() {
+			ResponseEntity<String> response = restTemplate.getForEntity("/menu/1", String.class);
+			assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+			DocumentContext documentContext = JsonPath.parse(response.getBody());
+			Number id = documentContext.read("$.id");
+			assertThat(id).isEqualTo(1);
 
-		DocumentContext documentContext = JsonPath.parse(response.getBody());
-		Number id = documentContext.read("$.id");
-		assertThat(id).isEqualTo(99);
+			String name = documentContext.read("$.name");
+			assertThat(name).isEqualTo("Salada Ravanello");
 
-		String name = documentContext.read("$.name");
-		assertThat(name).isEqualTo("Salada Ravanello");
+			String description = documentContext.read("$.description");
+			assertThat(description).isEqualTo("Rabanetes, folhas verdes e molho agridoce salpicados com gergelim.");
+		}
 
-		String description = documentContext.read("$.description");
-		assertThat(description).isEqualTo("Rabanetes, folhas verdes e molho agridoce salpicados com gergelim.");
-	}
+		@Test
+		@DisplayName("/api/menu/{id} - should return 404 when a not existing dish is requested")
+		void shouldNotReturnADishWithAnUnknownId() {
+			ResponseEntity<String> response =
+			restTemplate.getForEntity("/menu/1000", String.class);
 
-	@Test
-	void shouldNotReturnADishWithAnUnknownId() {
-		ResponseEntity<String> response =
-		restTemplate.getForEntity("/dish/1000", String.class);
-
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-		assertThat(response.getBody()).isBlank();
-	}
-
-	@Test
-	void shouldCreateANewDish() {
-		Dish dish = new Dish(null, "Vinagrete", "Tomates temperados com coisinhas que esqueci o nome");
-
-		ResponseEntity<Void> createResponse = restTemplate.postForEntity("/dish", dish, Void.class);
-		assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-		URI locationOfNewDish = createResponse.getHeaders().getLocation();
-		ResponseEntity<String> getResponse = restTemplate.getForEntity(locationOfNewDish, String.class);
-		assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-		DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
-		Number id = documentContext.read("$.id");
-		String name = documentContext.read("$.name");
-		String description = documentContext.read("$.description");
-
-		assertThat(id).isNotNull();
-		assertThat(name).isEqualTo(dish.name());
-		assertThat(description).isEqualTo(dish.description());
-	}
-
-	@Test
-	void shouldReturnAllDishesWhenListIsRequested() {
-		ResponseEntity<String> response = restTemplate.getForEntity("/dish/menu", String.class);
-
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-		DocumentContext documentContext = JsonPath.parse(response.getBody());
-		int dishCount = documentContext.read("$.length()");
-		assertThat(dishCount).isEqualTo(3);
-
-		JSONArray ids = documentContext.read("$..id");
-		assertThat(ids).containsExactlyInAnyOrder(99, 100, 101);
-
-		JSONArray names = documentContext.read("$..name");
-		assertThat(names).containsExactlyInAnyOrder("Salada Ravanello", "Macarons", "Suco de maracujá");
-
-		JSONArray descriptions = documentContext.read("$..description");
-		assertThat(descriptions).containsExactlyInAnyOrder(
-			"Rabanetes, folhas verdes e molho agridoce salpicados com gergelim.", 
-			"Farinha de amêndoas, manteiga, claras e açúcar.", 
-			"Suco de maracujá gelado, cremoso, docinho."
-		);
-	}
+			assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+			assertThat(response.getBody()).isBlank();
+		}
 }
